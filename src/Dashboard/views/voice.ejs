@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('partials/header.ejs'); %>
+
+    <title>Salon privés - <%=bot.username%></title>
+</head>
+
+<body>
+    <!-- Notifications Start -->
+    <%- include('partials/notifications/notifications.ejs') %>
+    <!-- Notifications End -->
+
+    <%- include('partials/components/navbar.ejs'); %>
+
+    <div id="wrapper">
+        <%- include('partials/components/zoneLeft.ejs'); %>
+
+        <%- include('partials/components/zoneProfileCategories.ejs'); %>
+
+        <div id="right-zone">
+            <div class="title-container">
+                <span class="title-text">Salon privés</span>
+            </div>
+
+            <div id="content-container">
+                <div class="box-select">
+                    <div class="roles-inner">
+                        <form action="/voice/save/<%= server.id %>" method="POST">
+                            <label class="input-title">Activer les salons privés :
+                                <% if (voice.data.channelStart) {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="enable" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } else {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="enable">
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } %>
+                            </label>
+                            <br>
+                            <br>
+
+                            <label class="input-title">Rôles Gérants :</label>
+                            <div class="autorole-container" id="autorole-container-manager">
+                                <% voice.rolesServer.forEach(role => {
+                                    if (voice.data.rolesManager.find(roleId => roleId === role.id)) { %>
+                                        <div class="role-item" data-role-id="<%= role.id %>" style="border: 2px solid <%= role.colorRGB %>;">
+                                            <%= role.name %>
+                                            <span class="remove-role-btn" onclick="removeRole(this)"> ❌</span>
+                                            <input type="hidden" name="roles_manager[]" value="<%= role.id %>">
+                                        </div>
+                                    <% }
+                                }); %>
+
+                                <button type="button" class="add-role-btn" id="add-role-btn-manager" data-type="manager">+</button>
+                            </div>
+                            <div class="role-dropdown" id="role-dropdown-manager" data-type="manager">
+                                <ul id="role-list">
+                                    <% voice.rolesServer.forEach(role => { %>
+                                        <li class="role-option <%= role.isNotPossible ? 'disabled' : '' %>"
+                                            data-managed="<%= role.isNotPossible %>"
+                                            data-role-id="<%= role.id %>"
+                                            style="color: <%= role.colorRGB %>;"
+                                            <%- role.isNotPossible ? 'onclick="event.preventDefault(); event.stopPropagation();"' : 'onclick="addRole(this, \'manager\');"' %>>
+                                            <%= role.name %>
+                                            <%- role.isNotPossible ? '<span class="info-icon" data-tooltip="Ce rôle est plus haut que mon rôle le plus haut"> <i style="color: red" class="fa-solid fa-circle-exclamation"></i></span>' : '' %>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                            <br>
+
+                            <label class="input-title">Rôles Autorisés :</label>
+                            <div class="autorole-container" id="autorole-container-accepted">
+                                <% voice.rolesServer.forEach(role => {
+                                if (voice.data.rolesAccepted.find(roleId => roleId === role.id)) { %>
+                                    <div class="role-item" data-role-id="<%= role.id %>" style="border: 2px solid <%= role.colorRGB %>;">
+                                        <%= role.name %>
+                                        <span class="remove-role-btn" onclick="removeRole(this)"> ❌</span>
+                                        <input type="hidden" name="roles_accepted[]" value="<%= role.id %>">
+                                    </div>
+                                <% }
+                                }); %>
+
+                                <button type="button" class="add-role-btn" id="add-role-btn-accepted" data-type="accepted">+</button>
+                            </div>
+                            <div class="role-dropdown" id="role-dropdown-accepted" data-type="accepted">
+                                <ul id="role-list">
+                                    <% voice.rolesServer.forEach(role => { %>
+                                        <li class="role-option <%= role.isNotPossible ? 'disabled' : '' %>"
+                                            data-managed="<%= role.isNotPossible %>"
+                                            data-role-id="<%= role.id %>"
+                                            style="color: <%= role.colorRGB %>;"
+                                                <%- role.isNotPossible ? 'onclick="event.preventDefault(); event.stopPropagation();"' : 'onclick="addRole(this, \'accepted\');"' %>>
+                                            <%= role.name %>
+                                            <%- role.isNotPossible ? '<span class="info-icon" data-tooltip="Ce rôle est plus haut que mon rôle le plus haut"> <i style="color: red" class="fa-solid fa-circle-exclamation"></i></span>' : '' %>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                            <br>
+
+                            <label class="input-title">Rôles Refusés :</label>
+                            <div class="autorole-container" id="autorole-container-refused">
+                                <% voice.rolesServer.forEach(role => {
+                                if (voice.data.rolesRefused.find(roleId => roleId === role.id)) { %>
+                                    <div class="role-item" data-role-id="<%= role.id %>" style="border: 2px solid <%= role.colorRGB %>;">
+                                        <%= role.name %>
+                                        <span class="remove-role-btn" onclick="removeRole(this)"> ❌</span>
+                                        <input type="hidden" name="roles_refused[]" value="<%= role.id %>">
+                                    </div>
+                                <% }
+                                }); %>
+
+                                <button type="button" class="add-role-btn" id="add-role-btn-refused" data-type="refused">+</button>
+                            </div>
+                            <div class="role-dropdown" id="role-dropdown-refused" data-type="refused">
+                                <ul id="role-list">
+                                    <% voice.rolesServer.forEach(role => { %>
+                                        <li class="role-option <%= role.isNotPossible ? 'disabled' : '' %>"
+                                            data-managed="<%= role.isNotPossible %>"
+                                            data-role-id="<%= role.id %>"
+                                            style="color: <%= role.colorRGB %>;"
+                                                <%- role.isNotPossible ? 'onclick="event.preventDefault(); event.stopPropagation();"' : 'onclick="addRole(this, \'refused\');"' %>>
+                                            <%= role.name %>
+                                            <%- role.isNotPossible ? '<span class="info-icon" data-tooltip="Ce rôle est plus haut que mon rôle le plus haut"> <i style="color: red" class="fa-solid fa-circle-exclamation"></i></span>' : '' %>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                            <br>
+
+                            <label class="input-title">Catégorie :</label>
+                            <select name="category" id="category" class="channels-dropdown">
+                                <% if (voice.data.category) {%>
+                                    <option value="<%= voice.data.category.id %>" selected>#<%= voice.data.category.name %></option>
+                                <%} else {%>
+                                    <option value="" selected>❌ Aucune catégorie</option>
+                                <%}%>
+                                <% voice.allCategories.forEach((ch) => { %>
+                                    <option value="<%= ch.id %>">#<%= ch.name %></option>
+                                <% }); %>
+                            </select>
+                            <br>
+                            <br>
+
+                            <label class="input-title">Salon Hub :</label>
+                            <select name="channel" id="channel" class="channels-dropdown">
+                                <% if (voice.data.channelStart) {%>
+                                    <option value="<%= voice.data.channelStart.id %>" selected>#<%= voice.data.channelStart.name %></option>
+                                <%} else {%>
+                                    <option value="" selected>❌ Aucune catégorie</option>
+                                <%}%>
+                                <% voice.allChannels.forEach((ch) => { %>
+                                    <option value="<%= ch.id %>">#<%= ch.name %></option>
+                                <% }); %>
+                            </select>
+                            <br>
+                            <br>
+
+                            <div class="switch-container column">
+                                <label class="input-title">Nom salon vocal</label>
+                                <textarea rows="1" name="channelName" class="text-area text long center-text" minlength="1" maxlength="50" required><%= voice.data.channelName %></textarea>
+                            </div>
+                            <br>
+
+                            <div class="switch-container column">
+                                <label class="input-title">Nom salon vocal d'attente</label>
+                                <textarea rows="1" name="channelWaitingName" class="text-area text long center-text" minlength="1" maxlength="50" required><%= voice.data.channelWaitingName %></textarea>
+                            </div>
+                            <br>
+
+                            <div class="switch-container column">
+                                <label class="input-title">Limite utilisateurs</label>
+                                <input class="text-area number center-text" type="number" name="channelLimit" min="0" max="99" value="<%= voice.data.channelLimit %>">
+                            </div>
+                            <br>
+
+                            <div class="switch-container column">
+                                <label class="input-title">Création d'un salon d'attente</label>
+                                <% if (voice.data.waitingChannel) {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="waitingChannel" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } else {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="waitingChannel">
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } %>
+                            </div>
+                            <br>
+
+                            <div class="switch-container column">
+                                <label class="input-title">Protection des permissions</label>
+                                <% if (voice.data.permissionsProtect) {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="permissionsProtect" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } else {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="permissionsProtect">
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } %>
+                            </div>
+
+                            <button type="submit" class="save-role-button button-blurple">Sauvegarder</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="box-select">
+                    <div class="input-inner">
+                        <label class="input-title">Explications :</label>
+                        <label class="variables"><code>Rôles Gérants</code> : Permet de gérer et rejoindre tous les salons privés.</label>
+                        <label class="variables"><code>Rôles Acceptés</code> : Permet de rejoindre tous les salons privés.</label>
+                        <label class="variables"><code>Rôles Refusés</code> : Permet d'interdire l'accès à tous les salons privés.</label>
+
+                        <label class="variables"><code>Catégorie</code> : Catégorie où seront créés les salons privés.</label>
+                        <label class="variables"><code>Salon hub</code> : Salon à rejoindre pour créer son salon privé.</label>
+                        <label class="variables"><code>Nom salon vocal</code> : Nom donné aux salons privés lors de leur création.</label>
+                        <label class="variables"><code>Nom salon vocal d'attente</code> : Nom donné aux salons privés d'attente lors de leur création.</label>
+                        <label class="variables"><code>Limite utilisateurs</code> : Permet de configurer la limite d'utilisateurs dans les salons privés.</label>
+                        <label class="variables"><code>Création d'un salon d'attente</code> : Salon vocal que les membres peuvent rejoindre pour demander à rejoindre votre salon privé.</label>
+                        <label class="variables"><code>Protection des permissions</code> : Activer ou désactiver l'ajout des rôles gérants, autorisés et refusés dans les paramètres des salons privés.</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    const openMenu = document.getElementById('leftZoneButton');
+    const profileZone = document.getElementById('profile-zone');
+
+    openMenu.addEventListener('click', () => {
+        profileZone.classList.toggle('desktop-only');
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const addRoleBtnManager = document.getElementById("add-role-btn-manager");
+        const roleDropdownManager = document.getElementById("role-dropdown-manager");
+
+        const addRoleBtnAccepted = document.getElementById("add-role-btn-accepted");
+        const roleDropdownAccepted = document.getElementById("role-dropdown-accepted");
+
+        const addRoleBtnRefused = document.getElementById("add-role-btn-refused");
+        const roleDropdownRefused = document.getElementById("role-dropdown-refused");
+
+        /* Open dropdown menu 1 */
+        addRoleBtnManager.addEventListener("click", () => {
+            roleDropdownManager.style.display = roleDropdownManager.style.display === "block" ? "none" : "block";
+        });
+
+        /* Open dropdown menu 2 */
+        addRoleBtnAccepted.addEventListener("click", () => {
+            roleDropdownAccepted.style.display = roleDropdownAccepted.style.display === "block" ? "none" : "block";
+        });
+
+        /* Open dropdown menu 3 */
+        addRoleBtnRefused.addEventListener("click", () => {
+            roleDropdownRefused.style.display = roleDropdownRefused.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!roleDropdownManager.contains(e.target) && e.target !== addRoleBtnManager) {
+                roleDropdownManager.style.display = "none";
+            }
+            if (!roleDropdownAccepted.contains(e.target) && e.target !== addRoleBtnAccepted) {
+                roleDropdownAccepted.style.display = "none";
+            }
+            if (!roleDropdownRefused.contains(e.target) && e.target !== addRoleBtnRefused) {
+                roleDropdownRefused.style.display = "none";
+            }
+        });
+    });
+</script>
+<script>
+    function addRole(roleElement, type) {
+        const roleId = roleElement.getAttribute("data-role-id");
+        const roleName = roleElement.innerText;
+        const roleColor = roleElement.style.color;
+        const rolesContainer = document.getElementById(`autorole-container-${type}`);
+        const addRoleBtn = document.getElementById(`add-role-btn-${type}`);
+
+        if ([...rolesContainer.querySelectorAll(".role-item")].some(el => el.dataset.roleId === roleId)) return;
+        if (rolesContainer.querySelectorAll(".role-item").length >= 10) return;
+
+        const roleItem = document.createElement("div");
+        roleItem.classList.add("role-item");
+        roleItem.dataset.roleId = roleId;
+        roleItem.style.border = `2px solid ${roleColor}`;
+        roleItem.innerText = roleName;
+
+        const removeBtn = document.createElement("span");
+        removeBtn.innerText = " ❌";
+        removeBtn.style.cursor = "pointer";
+        removeBtn.onclick = () => removeRole(removeBtn);
+
+        roleItem.appendChild(removeBtn);
+
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = `roles_${type}[]`;
+        hiddenInput.value = roleId;
+        roleItem.appendChild(hiddenInput);
+
+        rolesContainer.insertBefore(roleItem, addRoleBtn);
+    }
+
+    function removeRole(button) {
+        button.parentElement.remove();
+    }
+</script>
+</html>

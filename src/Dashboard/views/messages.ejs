@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('partials/header.ejs'); %>
+
+    <title>Messages - <%=bot.username%></title>
+</head>
+
+<body>
+<!-- Notifications Start -->
+<%- include('partials/notifications/notifications.ejs') %>
+<!-- Notifications End -->
+
+<%- include('partials/components/navbar.ejs'); %>
+
+<div id="wrapper">
+    <%- include('partials/components/zoneLeft.ejs'); %>
+
+    <%- include('partials/components/zoneProfileCategories.ejs'); %>
+
+    <div id="right-zone">
+        <div class="title-container">
+            <span class="title-text">Messages</span>
+        </div>
+
+        <div id="content-container">
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/messages/welcome/save/<%= server.id %>" method="POST">
+                        <label class="input-title">Messages d'arrivée :
+                            <% if (messages.channelWelcome) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+
+                        <textarea rows="3" name="message" id="message" class="text-area" required><%= messages.messageWelcome %></textarea>
+                        <label class="input-title">Salon :</label>
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (messages.channelWelcome) {%>
+                                <option value="<%= messages.channelWelcome.id %>" selected>#<%= messages.channelWelcome.name %></option>
+                            <%} else {%>
+                                <option value="" selected>❌ Aucun salon</option>
+                            <%}%>
+                            <% messages.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <div class="switch-container">
+                            <label class="input-title">Mention du membre :</label>
+                            <% if (messages.mention) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="mention" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="mention">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </div>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/messages/leave/save/<%= server.id %>" method="POST">
+                        <label class="input-title">Messages de départ :
+                            <% if (messages.channelLeave) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+                        <textarea rows="3" name="message" id="message" class="text-area" required><%= messages.messageLeave %></textarea>
+                        <label class="input-title">Salon :</label>
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (messages.channelLeave) {%>
+                                <option value="<%= messages.channelLeave.id %>" selected>#<%= messages.channelLeave.name %></option>
+                            <%} else {%>
+                                    <option value="" selected>❌ Aucun salon</option>
+                                <%}%>
+                            <% messages.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <label class="input-title">Variables disponibles :</label>
+                    <label class="variables"><code>{user.mention}</code> : Mention de l'utilisateur</label>
+                    <label class="variables"><code>{user.username}</code> : Nom de l'utilisateur</label>
+                    <label class="variables"><code>{member.nickname}</code> : Pseudo du membre</label>
+                    <label class="variables"><code>{server}</code> : Nom du serveur</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    const openMenu = document.getElementById('leftZoneButton');
+    const profileZone = document.getElementById('profile-zone');
+
+    openMenu.addEventListener('click', () => {
+        profileZone.classList.toggle('desktop-only');
+    });
+</script>
+</html>

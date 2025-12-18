@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('partials/header.ejs'); %>
+
+    <title>Mes Paramètres - <%=bot.username%></title>
+</head>
+
+<body>
+    <!-- Notifications Start -->
+    <%- include('partials/notifications/notifications.ejs') %>
+    <!-- Notifications End -->
+
+    <%- include('partials/components/navbar.ejs'); %>
+
+    <div id="wrapper">
+        <%- include('partials/components/zoneLeft.ejs'); %>
+
+        <%- include('partials/components/zoneProfileParameters.ejs'); %>
+
+        <div id="right-zone">
+            <div class="title-container">
+                <span class="title-text">Mes Paramètres</span>
+            </div>
+
+            <div id="content-container">
+                <div class="box-height">
+                    <div class="input-inner">
+                        <label class="input-title center-text">Mon anniversaire (DD/MM/YYYY)</label>
+                        <form action="/settings/birthday" method="POST">
+                            <div class="birthday">
+                                <input class="text-area number" type="number" value="<%=birthday.day%>" id="day" name="day" min="1" max="31" required>
+
+                                <select class="levels-select" id="month" name="month" required>
+                                    <% if (birthday.month) {%>
+                                        <option value="<%= birthday.month %>" selected><%= birthday.monthFormatted %></option>
+                                    <%}%>
+                                    <option value="01">Janvier</option>
+                                    <option value="02">Février</option>*
+                                    <option value="03">Mars</option>
+                                    <option value="04">Avril</option>
+                                    <option value="05">Mai</option>
+                                    <option value="06">Juin</option>
+                                    <option value="07">Juillet</option>
+                                    <option value="08">Août</option>
+                                    <option value="09">Septembre</option>
+                                    <option value="10">Octobre</option>
+                                    <option value="11">Novembre</option>
+                                    <option value="12">Décembre</option>
+                                </select>
+
+                                <input class="text-area number" type="number" value="<%=birthday.year%>" id="year" name="year" min="1900" max="<%= new Date().getFullYear() %>" required>
+
+                                <label class="input-title">Age privé :
+                                    <% if (birthday.private_age) {%>
+                                        <label class="switch">
+                                            <input type="checkbox" name="private" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                    <% } else {%>
+                                        <label class="switch">
+                                            <input type="checkbox" name="private">
+                                            <span class="slider"></span>
+                                        </label>
+                                    <% } %>
+                                </label>
+
+                                <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="box-height">
+                    <div class="input-inner center-text">
+                        <label class="input-title">Mes serveurs</label>
+                        <div id="guild-option" class="input-level">
+                            <div class="level-role-dropdown-container">
+                                <div class="level-role-dropdown-header" onclick="toggleDropdown('guild-dropdown')">
+                                    <span id="selected-guild">Sélectionner un serveur</span>
+                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
+                                </div>
+                                <div class="settings-dropdown" id="guild-dropdown">
+                                    <ul id="role-list">
+                                        <% botGuilds.forEach(guild => { %>
+                                            <li class="role-option"
+                                                data-guild-id="<%= guild.id %>"
+                                                onclick="selectGuild(this);">
+                                                <%= guild.name %>
+                                            </li>
+                                        <% }); %>
+                                    </ul>
+                                </div>
+                            </div>
+                            <input type="hidden" id="guild-select" name="guildId">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-container" id="user-box">
+                    <div class="flex" id="user-economy"></div>
+                    <div class="flex" id="user-level"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    const openMenu = document.getElementById('leftZoneButton');
+    const profileZone = document.getElementById('profile-zone');
+
+    openMenu.addEventListener('click', () => {
+        profileZone.classList.toggle('desktop-only');
+    });
+</script>
+<script>
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    async function selectGuild(element) {
+        const selectedRole = document.getElementById("selected-guild");
+        const guildId = element.getAttribute("data-guild-id");
+
+        selectedRole.innerText = element.innerText;
+
+        document.getElementById("guild-select").value = guildId;
+
+        document.getElementById("guild-dropdown").style.display = "none";
+
+        try {
+            const response = await fetch(`/settings/information/${guildId}`, {
+                method: 'GET'
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (data.alert) {
+                    return Swal.fire({
+                        title: data.alert.title,
+                        text: data.alert.text,
+                        icon: data.alert.icon,
+                        theme: "auto",
+                        confirmButtonColor: "#00a7b3",
+                        color: '#ffffff'
+                    });
+                }
+            }
+            else {
+                const userBox = document.getElementById("user-box");
+                const userEconomy = document.getElementById("user-economy");
+                const userLevel = document.getElementById("user-level");
+
+                userEconomy.innerHTML = `
+    <div class="settings-card">
+        <div class="settings-icon settings-economy">
+            <i class="fa-solid fa-coins"></i>
+        </div>
+        <div class="settings-content">
+            <h3>Économie</h3>
+            <p>Tu possèdes <strong>${data.economy.money}</strong> ${data.economy.name} !</p>
+        </div>
+    </div>
+`;
+
+                userLevel.innerHTML = `
+    <div class="settings-card">
+        <div class="settings-icon settings-level">
+            <i class="fa-solid fa-star"></i>
+        </div>
+        <div class="settings-content">
+            <h3>Niveau ${data.levels.level}</h3>
+            <p>XP : <strong>${data.levels.xp}</strong> / ${data.levels.xpReq}</p>
+            <div class="xp-bar">
+                <div class="xp-fill" style="width: ${(data.levels.xp / data.levels.xpReq) * 100}%"></div>
+            </div>
+        </div>
+    </div>
+`;
+
+                userBox.classList.remove("hidden");
+            }
+        }
+        catch(error) {
+            console.error("Erreur lors de la requête AJAX:", error);
+            Swal.fire({
+                title: "Erreur",
+                text: "Une erreur est survenue lors de la requête.",
+                icon: "error",
+                theme: "auto",
+                confirmButtonColor: "#00a7b3",
+                color: '#ffffff'
+            });
+        }
+    }
+
+    document.addEventListener("click", () => {
+        const dropdown = document.getElementById("guild-dropdown");
+        const headerDropdown = document.getElementsByClassName("level-role-dropdown-header");
+
+        /* Close dropdown menu */
+        document.addEventListener("click", (event) => {
+            if (!headerDropdown[0].contains(event.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    });
+</script>
+</html>

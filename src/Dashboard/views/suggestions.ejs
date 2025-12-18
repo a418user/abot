@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('partials/header.ejs'); %>
+
+    <title>Suggestions - <%=bot.username%></title>
+</head>
+
+<body>
+    <!-- Notifications Start -->
+    <%- include('partials/notifications/notifications.ejs') %>
+    <!-- Notifications End -->
+
+    <%- include('partials/components/navbar.ejs'); %>
+
+    <div id="wrapper">
+        <%- include('partials/components/zoneLeft.ejs'); %>
+
+        <%- include('partials/components/zoneProfileCategories.ejs'); %>
+
+        <div id="right-zone">
+            <div class="title-container">
+                <span class="title-text">Suggestions</span>
+            </div>
+
+            <div id="content-container">
+                <div class="box-select">
+                    <div class="roles-inner">
+                        <form action="/suggestions/save/<%= server.id %>" method="POST">
+                            <label class="input-title">Activer les suggestions :
+                                <% if (suggestions.data.channel) {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="enable" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } else {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="enable">
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } %>
+                            </label>
+                            <br>
+                            <br>
+
+                            <label class="input-title">Rôles Bypass :</label>
+                            <div class="autorole-container" id="autorole-container-bypass">
+                                <% suggestions.rolesServer.forEach(role => {
+                                    if (suggestions.data.rolesBypass.find(roleId => roleId === role.id)) { %>
+                                        <div class="role-item" data-role-id="<%= role.id %>" style="border: 2px solid <%= role.colorRGB %>;">
+                                            <%= role.name %>
+                                            <span class="remove-role-btn" onclick="removeRole(this)"> ❌</span>
+                                            <input type="hidden" name="roles_bypass[]" value="<%= role.id %>">
+                                        </div>
+                                    <% }
+                                }); %>
+
+                                <button type="button" class="add-role-btn" id="add-role-btn-bypass" data-type="bypass">+</button>
+                            </div>
+                            <div class="role-dropdown" id="role-dropdown-bypass" data-type="bypass">
+                                <ul id="role-list">
+                                    <% suggestions.rolesServer.forEach(role => { %>
+                                        <li class="role-option <%= role.isNotPossible ? 'disabled' : '' %>"
+                                            data-managed="<%= role.isNotPossible %>"
+                                            data-role-id="<%= role.id %>"
+                                            style="color: <%= role.colorRGB %>;"
+                                            <%- role.isNotPossible ? 'onclick="event.preventDefault(); event.stopPropagation();"' : 'onclick="addRole(this, \'bypass\');"' %>>
+                                            <%= role.name %>
+                                            <%- role.isNotPossible ? '<span class="info-icon" data-tooltip="Ce rôle est plus haut que mon rôle le plus haut"> <i style="color: red" class="fa-solid fa-circle-exclamation"></i></span>' : '' %>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                            <br>
+
+                            <label class="input-title">Rôles Blacklist :</label>
+                            <div class="autorole-container" id="autorole-container-blacklist">
+                                <% suggestions.rolesServer.forEach(role => {
+                                if (suggestions.data.rolesBlacklist.find(roleId => roleId === role.id)) { %>
+                                    <div class="role-item" data-role-id="<%= role.id %>" style="border: 2px solid <%= role.colorRGB %>;">
+                                        <%= role.name %>
+                                        <span class="remove-role-btn" onclick="removeRole(this)"> ❌</span>
+                                        <input type="hidden" name="roles_blacklist[]" value="<%= role.id %>">
+                                    </div>
+                                <% }
+                                }); %>
+
+                                <button type="button" class="add-role-btn" id="add-role-btn-blacklist" data-type="blacklist">+</button>
+                            </div>
+                            <div class="role-dropdown" id="role-dropdown-blacklist" data-type="blacklist">
+                                <ul id="role-list">
+                                    <% suggestions.rolesServer.forEach(role => { %>
+                                        <li class="role-option <%= role.isNotPossible ? 'disabled' : '' %>"
+                                            data-managed="<%= role.isNotPossible %>"
+                                            data-role-id="<%= role.id %>"
+                                            style="color: <%= role.colorRGB %>;"
+                                                <%- role.isNotPossible ? 'onclick="event.preventDefault(); event.stopPropagation();"' : 'onclick="addRole(this, \'blacklist\');"' %>>
+                                            <%= role.name %>
+                                            <%- role.isNotPossible ? '<span class="info-icon" data-tooltip="Ce rôle est plus haut que mon rôle le plus haut"> <i style="color: red" class="fa-solid fa-circle-exclamation"></i></span>' : '' %>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                            <br>
+
+                            <label class="input-title">Salon des suggestions :</label>
+                            <select name="channel" id="channel" class="channels-dropdown">
+                                <% if (suggestions.data.channel) {%>
+                                    <option value="<%= suggestions.data.channel.id %>" selected>#<%= suggestions.data.channel.name %></option>
+                                <%} else {%>
+                                    <option value="" selected>❌ Aucun salon</option>
+                                <%}%>
+                                <% suggestions.allChannels.forEach((ch) => { %>
+                                    <option value="<%= ch.id %>">#<%= ch.name %></option>
+                                <% }); %>
+                            </select>
+                            <br>
+                            <br>
+
+                            <div class="switch-container column">
+                                <label class="input-title">Inclure la création d'un fil de discussion</label>
+                                <% if (suggestions.data.isThread) {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="isThread" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } else {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="isThread">
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } %>
+                            </div>
+                            <br>
+
+                            <div class="switch-container column">
+                                <label class="input-title">Inclure la création de suggestions par message</label>
+                                <% if (suggestions.data.isMessage) {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="isMessage" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } else {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="isMessage">
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } %>
+                            </div>
+
+                            <button type="submit" class="save-role-button button-blurple">Sauvegarder</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="box-select">
+                    <div class="input-inner">
+                        <label class="input-title">Explications :</label>
+                        <label class="variables"><code>Rôles Bypass</code> : Rôles qui peuvent écrire dans le salon des suggestions sans que celle-ci soit transformée en suggestion (type Message dans le salon activé)</label>
+                        <label class="variables"><code>Rôles Blacklist</code> : Rôles qui ne peuvent pas créer de suggestions</label>
+                        <label class="variables"><code>Salon des suggestions</code> : Salon où seront envoyées toutes les suggestions</label>
+                        <label class="variables"><code>Inclure la création d'un fil de discussion</code> : Permet de créer un fil de discussion sous le message de la suggestion</label>
+                        <label class="variables"><code>Inclure la création de suggestions par message</code> : Par défaut, seulement les suggestions par commande sont activées</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    const openMenu = document.getElementById('leftZoneButton');
+    const profileZone = document.getElementById('profile-zone');
+
+    openMenu.addEventListener('click', () => {
+        profileZone.classList.toggle('desktop-only');
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const addRoleBtnBypass = document.getElementById("add-role-btn-bypass");
+        const roleDropdownBypass = document.getElementById("role-dropdown-bypass");
+
+        const addRoleBtnBlacklist = document.getElementById("add-role-btn-blacklist");
+        const roleDropdownBlacklist = document.getElementById("role-dropdown-blacklist");
+
+        /* Open dropdown menu 1 */
+        addRoleBtnBypass.addEventListener("click", () => {
+            roleDropdownBypass.style.display = roleDropdownBypass.style.display === "block" ? "none" : "block";
+        });
+
+        /* Open dropdown menu 2 */
+        addRoleBtnBlacklist.addEventListener("click", () => {
+            roleDropdownBlacklist.style.display = roleDropdownBlacklist.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!roleDropdownBypass.contains(e.target) && e.target !== addRoleBtnBypass) {
+                roleDropdownBypass.style.display = "none";
+            }
+            if (!roleDropdownBlacklist.contains(e.target) && e.target !== addRoleBtnBlacklist) {
+                roleDropdownBlacklist.style.display = "none";
+            }
+        });
+    });
+</script>
+<script>
+    function addRole(roleElement, type) {
+        const roleId = roleElement.getAttribute("data-role-id");
+        const roleName = roleElement.innerText;
+        const roleColor = roleElement.style.color;
+        const rolesContainer = document.getElementById(`autorole-container-${type}`);
+        const addRoleBtn = document.getElementById(`add-role-btn-${type}`);
+
+        if ([...rolesContainer.querySelectorAll(".role-item")].some(el => el.dataset.roleId === roleId)) return;
+
+        const roleItem = document.createElement("div");
+        roleItem.classList.add("role-item");
+        roleItem.dataset.roleId = roleId;
+        roleItem.style.border = `2px solid ${roleColor}`;
+        roleItem.innerText = roleName;
+
+        const removeBtn = document.createElement("span");
+        removeBtn.innerText = " ❌";
+        removeBtn.style.cursor = "pointer";
+        removeBtn.onclick = () => removeRole(removeBtn);
+
+        roleItem.appendChild(removeBtn);
+
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = `roles_${type}[]`;
+        hiddenInput.value = roleId;
+        roleItem.appendChild(hiddenInput);
+
+        rolesContainer.insertBefore(roleItem, addRoleBtn);
+    }
+
+    function removeRole(button) {
+        button.parentElement.remove();
+    }
+</script>
+</html>

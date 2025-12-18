@@ -1,0 +1,130 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90%;
+    list-style: none;
+    padding: 0;
+}
+
+.dashboard-container ul {
+    overflow: scroll;
+    scrollbar-width: none;
+    height: 100%;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-title {
+    color: var(--blurple400);
+    font-weight: bold;
+    font-size: 32px;
+    text-align: center;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .dashboard-title {
+        font-size: 24px;
+    }
+
+    .divider-profile {
+        margin: 16px auto;
+    }
+}
+
+.divider-profile {
+    width: 75%;
+    height: 4px;
+    margin: 40px auto;
+    background-color: var(--orange);
+    border-radius: 8px;
+}
+
+.stats-button-container {
+    text-align: center;
+}
+
+.stats-button {
+    color: white;
+    border: 2px solid var(--blurple400);
+    transition: background-color 0.3s ease;
+    background: none;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.stats-button:hover {
+    background-color: var(--blurple400);
+}
+
+.info {
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.info ul {
+    padding: 0;
+}
+
+.info-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+@media (max-width: 1110px) {
+    .info-container {
+        flex-direction: column;
+    }
+}
+
+.info-box {
+    border: 2px solid #475569;
+    width: 240px;
+    border-radius: 8px;
+    position: relative;
+}
+
+@media (min-width: 640px) {
+    .info-box {
+        width: 288px;
+    }
+}
+
+@media (min-width: 768px) {
+    .info-box {
+        width: 384px;
+    }
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.info-title {
+    font-weight: bold;
+    text-align: center;
+}
+
+.info-data {
+    text-align: center;
+}
+
+.info-close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}

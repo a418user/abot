@@ -1,0 +1,44 @@
+<div id="profile-zone" class="desktop-only">
+    <ul class="slide-2">
+        <li>
+            <% if(user.avatar) {%>
+                <img src="https://cdn.discordapp.com/avatars/<%= user.id%>/<%= user.avatar%>.jpg" alt="" class="avatar-profile">
+            <%} else {%>
+                <button>
+                    <canvas class="avatar-profile" id="<%= user.username.replace(/\w+/g, name => name[0]).replace(/\s/g, '') %>"></canvas>
+                    <script>
+                        function createAvatar(user) {
+                            const nameAcronym = document.getElementById(user.username.replace(/\w+/g, name => name[0]).replace(/\s/g, '')).getContext('2d');
+                            nameAcronym.font = '15px Arial';
+                            nameAcronym.textAlign = "center";
+                            nameAcronym.fillStyle = "white";
+                            nameAcronym.fillText(user.username.replace(/\w+/g, name => name[0]).replace(/\s/g, ''), 35, 40);
+                        }
+                        createAvatar();
+                    </script>
+                </button>
+            <%}%>
+        </li>
+        <li class="user-profile-2">
+            <strong><%= user.username%></strong>
+        </li>
+        <li>
+            <ul class="menu-profile-private">
+                <li>
+                    <a href="/settings" class="menu-link">
+                        <i class="fa-solid fa-user"></i>
+                        Mes paramètres
+                    </a>
+                </li>
+                <% if (isAdmin) {%>
+                    <li>
+                        <a href="/administration" class="menu-link">
+                            <i class="fa-solid fa-user"></i>
+                            Administration
+                        </a>
+                    </li>
+                <%}%>
+            </ul>
+        </li>
+    </ul>
+</div>

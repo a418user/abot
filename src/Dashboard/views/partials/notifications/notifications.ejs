@@ -1,0 +1,13 @@
+<script>
+    <% if (session && session.alertMessage) { %>
+    Swal.fire({
+        title: "<%= session.alertMessage.title %>",
+        text: "<%- session.alertMessage.text %>",
+        icon: "<%= session.alertMessage.icon %>",
+        theme: "auto",
+        confirmButtonColor: "#00a7b3",
+        color: '#ffffff'
+    });
+    <% session.alertMessage = null; %>
+    <% } %>
+</script>

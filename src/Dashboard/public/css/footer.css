@@ -1,0 +1,22 @@
+.footer {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background300);
+}
+
+.footer-content {
+    text-align: center;
+}
+
+.footer-text {
+    color: var(--white);
+}
+
+.footer-link a {
+    color: var(--white);
+    text-decoration: none;
+}
+
+.footer-link a:hover {
+    text-decoration: underline;
+}

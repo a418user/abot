@@ -1,0 +1,590 @@
+#right-zone {
+    background: var(--background400);
+    height: calc(100% - 96px);
+    width: 100%;
+    padding: 116px 20px 20px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+#content-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+.box {
+    width: 500px;
+    height: 350px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.box-width {
+    height: 350px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.box-height {
+    width: 600px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.box-select {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.box-inner {
+    /*background: var(--slate);*/
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.input-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid var(--blurple400);
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.roles-inner {
+    /*background: var(--slate);*/
+    border-radius: 8px;
+    width: 100%;
+    height: 60%;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid var(--blurple400);
+}
+
+.button {
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--white);
+    width: 208px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.button-red {
+    background-color: var(--red);
+    transition: background-color 0.3s ease;
+}
+
+.button-red:hover {
+    background-color: var(--redHover);
+}
+
+.button-blurple {
+    background-color: var(--blurple400);
+    transition: background-color 0.3s ease;
+}
+
+.button-blurple:hover {
+    background-color: var(--blurple500);
+}
+
+.button-blue {
+    background-color: var(--blue);
+    transition: background-color 0.3s ease;
+}
+
+.button-blue:hover {
+    background-color: var(--blueHover);
+}
+
+.title-container {
+    border-bottom: 2px solid var(--blurple400);
+    width: 16rem;
+}
+
+.title-text {
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.subtitle-container {
+    color: white;
+    margin-top: 20px;
+}
+
+.box-canvas {
+    background: var(--slate);
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Autorole Page - Start */
+
+.autorole-container {
+    position: relative;
+    background-color: var(--gray2);
+    color: var(--white);
+    padding: 12px;
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+    transition: box-shadow 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    max-height: 150px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--blurple400) var(--gray);
+}
+
+.autorole-container:hover {
+    box-shadow: 0 0 0 1px var(--blurple400);
+}
+
+.role-item {
+    border: 1px solid var(--blurple400);
+    border-radius: 8px;
+    color: var(--white);
+    padding: 5px 10px;
+    cursor: default;
+}
+
+.add-role-btn {
+    background-color: var(--blurple400);
+    color: var(--white);
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.add-role-btn:hover {
+    background-color: var(--blurple500);
+}
+
+.role-dropdown {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    background: var(--gray2);
+    border: 1px solid var(--blurple400);
+    border-radius: 5px;
+    width: calc(100% - 20px);
+    display: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--blurple400) var(--gray);
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+.role-option {
+    position: relative;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#role-list {
+    list-style: none;
+    padding: 0;
+}
+
+.role-option:hover {
+    background-color: var(--blurple300);
+}
+
+.role-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.save-role-button {
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--white);
+    width: 208px;
+    cursor: pointer;
+    font-size: 15px;
+    display: block;
+    margin: 10px auto 0 auto;
+    text-align: center;
+}
+
+.remove-role-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.info-icon {
+    margin-right: 10px;
+    right: 0;
+    position: absolute;
+    display: inline-block;
+}
+
+.info-icon:hover::after {
+    font-size: 15px;
+    content: attr(data-tooltip);
+    position: absolute;
+    background-color: var(--black);
+    color: var(--white);
+    padding: 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+}
+
+.info-icon:hover::after {
+    opacity: 1;
+}
+
+.input-title {
+    font-weight: bold;
+}
+
+.variables {
+    font-size: 1rem;
+}
+
+/* Autorole Page - End */
+
+/* Messages Page - Start */
+#form-messages {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 15px;
+}
+
+.switch-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.switch-container.column {
+    flex-direction: column;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;  /* Réduit la largeur du switch */
+    height: 20px; /* Réduit la hauteur du switch */
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px; /* Réduit la taille du cercle */
+    width: 16px;  /* Réduit la taille du cercle */
+    border-radius: 50%;
+    bottom: 2px;  /* Ajuste la position du cercle */
+    background-color: white;
+    transition: 0.4s;
+}
+
+/* Lorsque la case est cochée, on déplace le bouton */
+input:checked + .slider {
+    background-color: var(--blurple400);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.text-area {
+    background-color: var(--gray2);
+    color: var(--white);
+    border-radius: 8px;
+    border: 1px solid #4a5568;
+    outline: none;
+    align-content: center;
+    padding-left: 5px;
+}
+
+.text-area:focus {
+    box-shadow: 0 0 0 2px var(--blurple400);
+}
+
+.save-button {
+    border: none;
+    border-radius: 8px;
+    color: var(--white);
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: auto;
+    padding: 12px;
+}
+
+/* Messages Page - End */
+
+/* Logs Page - Start */
+.channels-dropdown {
+    background-color: var(--gray2);
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #4b5563;
+    width: 100%;
+    outline: none;
+    transition: box-shadow 0.2s ease-in-out;
+    scrollbar-width: thin;
+    scrollbar-color: var(--blurple400) var(--gray);
+}
+
+.channels-dropdown:focus {
+    box-shadow: 0 0 0 2px var(--blurple400);
+}
+
+/* Logs Page - End */
+
+/* Levels Page - Start */
+.rewards-inner {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--blurple400);
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.level-container {
+    color: var(--white);
+    transition: box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input-level {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.number {
+    width: 80px;
+    height: 40px;
+    font-size: 16px;
+}
+
+.levels-select {
+    background-color: var(--gray2);
+    color: white;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #4b5563;
+    transition: box-shadow 0.2s ease-in-out;
+    font-size: 15px;
+}
+
+.levels-select:focus {
+    box-shadow: 0 0 0 2px var(--blurple400);
+}
+
+.reward-option {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.level-role-dropdown-container {
+    position: relative;
+    width: 100%;
+}
+
+.level-role-dropdown-header {
+    background-color: var(--gray2);
+    color: white;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #4b5563;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.chevron-icon {
+    font-size: 10px;
+}
+
+.level-dropdown {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background-color: var(--gray2);
+    border: 1px solid #4b5563;
+    border-radius: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    scrollbar-width: thin;
+    scrollbar-color: var(--blurple400) var(--gray);
+}
+
+.level-dropdown.bottom {
+    bottom: 100%;
+}
+
+.rewards-list {
+    border-radius: 8px;
+    width: 100%;
+    color: var(--white);
+
+    max-height: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--blurple400) var(--gray);
+
+    display: flex;
+    flex-direction: column;
+}
+
+.rewards-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.reward-item {
+    background: var(--gray2);
+    border: 1px solid var(--blurple400);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+}
+
+/* Levels Page - End */
+
+/* Economy Page - Start */
+.text {
+    height: 40px;
+    font-size: 16px;
+}
+
+.text.long {
+    width: 300px;
+}
+
+#form-economy {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.reset-button {
+    border: none;
+    border-radius: 8px;
+    color: var(--white);
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: auto;
+    padding: 12px;
+    width: 150px;
+}
+/* Economy Page - End */
+
+@media (max-width: 992px) {
+    .box {
+        height: auto;
+    }
+
+    .box-height {
+        height: auto;
+    }
+
+    .box-width {
+        height: auto;
+    }
+
+    #form-economy {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .title-container {
+        width: 13rem;
+    }
+
+    .box-height {
+        width: 500px;
+    }
+
+    #form-economy {
+        flex-direction: column;
+    }
+
+    .input-level {
+        flex-direction: column;
+    }
+
+    .podium-container {
+        flex-direction: column;
+        align-items: center !important;
+    }
+
+    .text.long {
+        width: auto;
+    }
+}

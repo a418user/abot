@@ -1,0 +1,181 @@
+#nav {
+    height: 96px;
+    background: var(--background300);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 32px);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 100;
+}
+
+.nav-left,
+.nav-right{
+    display: flex;
+}
+
+.menu-items {
+    display: flex;
+    gap: 15px;
+    padding-left: 0;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.menu-item {
+    list-style: none;
+}
+
+.menu-avatar,
+.menu-avatar-bot {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+
+}
+
+.menu-avatar-bot:hover {
+    transform: scale(1.1);
+}
+
+.menu-link {
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.menu-link:hover {
+    color: var(--blurple400);
+}
+
+.menu-home {
+    font-weight: bold;
+}
+
+.menu-icon {
+    color: var(--blurple400);
+    transition: color 0.3s ease;
+}
+
+.menu-icon:hover {
+    color: var(--blurple500);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--blurple400);
+    transition: background-color 0.3s ease;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.user-profile:hover {
+    background-color: var(--blurple500);
+    color: var(--white);
+}
+
+.login-button {
+    background: var(--blurple400);
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: var(--blurple500);
+    color: var(--white);
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--white);
+    transition: color 0.3s ease;
+}
+
+.menu-toggle:hover {
+    color: var(--blurple400);
+}
+
+.menu-overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 110;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.close-button i {
+    color: var(--white);
+    font-size: 24px;
+}
+
+.menu-list {
+    list-style: none;
+    text-align: center;
+    padding: 0;
+}
+
+.menu-list li {
+    margin: 15px 0;
+}
+
+.menu-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--blurple400);
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+.menu-title:hover {
+    color: var(--gray);
+}
+
+.menu-icons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+.menu-icons:hover {
+    color: var(--white)
+}
+
+.menu-logout {
+    font-size: 18px;
+    color: var(--red);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.menu-logout:hover {
+    color: var(--redHover);
+}
+
+.menu-logout i {
+    margin-right: 5px;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+}

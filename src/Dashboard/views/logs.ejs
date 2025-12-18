@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('partials/header.ejs'); %>
+
+    <title>Logs - <%=bot.username%></title>
+</head>
+
+<body>
+<!-- Notifications Start -->
+<%- include('partials/notifications/notifications.ejs') %>
+<!-- Notifications End -->
+
+<%- include('partials/components/navbar.ejs'); %>
+
+<div id="wrapper">
+    <%- include('partials/components/zoneLeft.ejs'); %>
+
+    <%- include('partials/components/zoneProfileCategories.ejs'); %>
+
+    <div id="right-zone">
+        <div class="title-container">
+            <span class="title-text">Logs</span>
+        </div>
+
+        <div id="content-container">
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/logs/save/<%= server.id %>?type=message_id" method="POST">
+                        <label class="input-title">Messages :
+                            <% if (logs.message) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (logs.message) {%>
+                                <option value="<%= logs.message.id %>" selected>#<%= logs.message.name %></option>
+                            <%} else {%>
+                                <option value="" selected>❌ Aucun salon</option>
+                            <%}%>
+                            <% logs.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <label class="variables">Logs <code>Messages</code> :</label>
+                        <label class="variables">● Historique des messages édités.</label>
+                        <label class="variables">● Historique des messages supprimés.</label>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/logs/save/<%= server.id %>?type=link_id" method="POST">
+                        <label class="input-title">Invitation :
+                            <% if (logs.link) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (logs.link) {%>
+                                <option value="<%= logs.link.id %>" selected>#<%= logs.link.name %></option>
+                            <%} else {%>
+                                <option value="" selected>❌ Aucun salon</option>
+                            <%}%>
+                            <% logs.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <label class="variables">Logs <code>Invitation</code> :</label>
+                        <label class="variables">● Historique des invitations crées.</label>
+                        <label class="variables">● Historique des invitations supprimées.</label>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/logs/save/<%= server.id %>?type=voice_id" method="POST">
+                        <label class="input-title">Activité vocale :
+                            <% if (logs.voice) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (logs.voice) {%>
+                                <option value="<%= logs.voice.id %>" selected>#<%= logs.voice.name %></option>
+                            <%} else {%>
+                                <option value="" selected>❌ Aucun salon</option>
+                            <%}%>
+                            <% logs.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <label class="variables">Logs <code>Activité vocale</code> :</label>
+                        <label class="variables">● Historique des connexions.</label>
+                        <label class="variables">● Historique de l'activité des vocaux (stream, caméra, mute casque et micro).</label>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/logs/save/<%= server.id %>?type=update_member_id" method="POST">
+                        <label class="input-title">Mise à jour Membres :
+                            <% if (logs.updateMember) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (logs.updateMember) {%>
+                                <option value="<%= logs.updateMember.id %>" selected>#<%= logs.updateMember.name %></option>
+                            <%} else {%>
+                                <option value="" selected>❌ Aucun salon</option>
+                            <%}%>
+                            <% logs.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <label class="variables">Logs <code>Mise à jour Membres</code> :</label>
+                        <label class="variables">● Historique des bannissements.</label>
+                        <label class="variables">● Historique des rôles et des pseudos.</label>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/logs/save/<%= server.id %>?type=update_server_id" method="POST">
+                        <label class="input-title">Mise à jour Serveur :
+                            <% if (logs.updateServer) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (logs.updateServer) {%>
+                                <option value="<%= logs.updateServer.id %>" selected>#<%= logs.updateServer.name %></option>
+                            <%} else {%>
+                                <option value="" selected>❌ Aucun salon</option>
+                            <%}%>
+                            <% logs.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <label class="variables">Logs <code>Mise à jour Serveur</code> :</label>
+                        <label class="variables">● Historique des modifications des rôles et des salons (création, modification, suppression).</label>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    const openMenu = document.getElementById('leftZoneButton');
+    const profileZone = document.getElementById('profile-zone');
+
+    openMenu.addEventListener('click', () => {
+        profileZone.classList.toggle('desktop-only');
+    });
+</script>
+</html>

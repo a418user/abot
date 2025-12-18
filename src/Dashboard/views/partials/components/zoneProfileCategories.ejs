@@ -1,0 +1,83 @@
+<div id="profile-zone" class="desktop-only">
+    <ul class="slide-2">
+        <li>
+            <% if(user.avatar) {%>
+                <a href="/profile" class="mobile-only">
+                    <img src="https://cdn.discordapp.com/avatars/<%= user.id%>/<%= user.avatar%>.jpg" alt="" class="avatar-profile">
+                </a>
+                <button class="button-profile-mobile desktop-only">
+                    <img src="https://cdn.discordapp.com/avatars/<%= user.id%>/<%= user.avatar%>.jpg" alt="" class="avatar-profile">
+                </button>
+            <%} else {%>
+                <button>
+                    <canvas class="avatar-profile" id="<%= user.username.replace(/\w+/g, name => name[0]).replace(/\s/g, '') %>"></canvas>
+                    <script>
+                        function createAvatar(user) {
+                            const nameAcronym = document.getElementById(user.username.replace(/\w+/g, name => name[0]).replace(/\s/g, '')).getContext('2d');
+                            nameAcronym.font = '15px Arial';
+                            nameAcronym.textAlign = "center";
+                            nameAcronym.fillStyle = "white";
+                            nameAcronym.fillText(user.username.replace(/\w+/g, name => name[0]).replace(/\s/g, ''), 35, 40);
+                        }
+                        createAvatar();
+                    </script>
+                </button>
+            <%}%>
+        </li>
+        <li class="user-profile-2">
+            <strong><%= user.username%></strong>
+        </li>
+        <li>
+            <ul class="menu-profile-private">
+                <li>
+                    <a href="/messages/<%= server.id %>" class="menu-link">
+                        <i class="fa-solid fa-comment"></i>
+                        Messages
+                    </a>
+                </li>
+                <li>
+                    <a href="/logs/<%= server.id %>" class="menu-link">
+                        <i class="fa-solid fa-box-archive"></i>
+                        Logs
+                    </a>
+                </li>
+                <li>
+                    <a href="/roles/<%= server.id %>" class="menu-link">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        Auto rôles
+                    </a>
+                </li>
+                <li>
+                    <a href="/voice/<%= server.id %>" class="menu-link">
+                        <i class="fa-solid fa-lock"></i>
+                        Salons privés
+                    </a>
+                </li>
+                <li>
+                    <a href="/suggestions/<%= server.id %>" class="menu-link">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        Suggestions
+                    </a>
+                </li>
+                <li>
+                    <a href="/channels/<%= server.id %>" class="menu-link">
+                        <i class="fa-solid fa-user"></i>
+                        Salons spécials
+                    </a>
+                </li>
+                <li>
+                    <a href="/economy/<%= server.id %>" class="menu-link">
+                        <i class="fa-solid fa-coins"></i>
+                        Économie
+                    </a>
+                </li>
+                <li>
+                    <a href="/levels/<%= server.id %>" class="menu-link">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        Niveaux
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

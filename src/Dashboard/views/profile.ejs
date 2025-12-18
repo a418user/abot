@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('partials/header.ejs'); %>
+
+    <title>Profil - <%=bot.username%></title>
+</head>
+
+<body>
+    <%- include('partials/components/navbar.ejs'); %>
+
+    <div id="wrapper">
+        <%- include('partials/components/zoneLeft.ejs'); %>
+
+        <%- include('partials/components/zoneProfileParameters.ejs'); %>
+
+        <div id="right-zone">
+            <ul class="dashboard-container">
+                <li class="dashboard-title">
+                    Bienvenue <%= user.username%> sur le Dashboard de<br> <%= bot.username%>
+                </li>
+                <li class="divider-profile">
+                </li>
+                <li id="statsButton" class="stats-button-container">
+                    <button class="stats-button" onclick="openInfo()">
+                        Statistiques
+                    </button>
+                </li>
+                <li class="info hidden" id="info">
+                    <ul>
+                        <li class="info-container">
+                            <div class="info-box" id="box1">
+                                <div class="info-content">
+                                    <p class="info-title">Serveurs</p>
+                                    <p class="info-data"><%= guilds %></p>
+                                </div>
+                            </div>
+                            <div class="info-box" id="box2">
+                                <button id="closeButtonInfo" class="info-close-button" onclick="closeInfo()">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                                <div class="info-content">
+                                    <p class="info-title">Utilisateurs</p>
+                                    <p class="info-data"><%= users %></p>
+                                </div>
+                            </div>
+                        </li>
+                        <li><br></li>
+                        <li class="info-container">
+                            <div class="info-box">
+                                <div class="info-content">
+                                    <p class="info-title">Ping du bot</p>
+                                    <p class="info-data"><%= pingBot %></p>
+                                </div>
+                            </div>
+                            <div class="info-box">
+                                <div class="info-content">
+                                    <p class="info-title">En ligne depuis</p>
+                                    <p class="info-data" id="uptime"></p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    socket.on('uptime', function(data) {
+        $('#uptime').html(data.uptime);
+    })
+</script>
+
+<script>
+    const openMenu = document.getElementById('leftZoneButton');
+    const profileZone = document.getElementById('profile-zone');
+
+    openMenu.addEventListener('click', () => {
+        profileZone.classList.toggle('desktop-only');
+    });
+</script>
+
+<script>
+    function moveButton() {
+        const button = document.getElementById("closeButtonInfo");
+        const box1 = document.getElementById("box1");
+        const box2 = document.getElementById("box2");
+
+        if (window.innerWidth <= 1110) {
+            box1.appendChild(button);
+        } else {
+            box2.appendChild(button);
+        }
+    }
+
+    window.addEventListener("load", moveButton);
+    window.addEventListener("resize", moveButton);
+
+    function closeInfo() {
+        const element = document.getElementById('info');
+
+        element.style.maxHeight = '0';
+        element.style.opacity = '0';
+
+        setTimeout(() => {
+            element.style.display = 'none';
+        }, 500);
+
+        const button = document.getElementById("statsButton");
+        button.style.display = "block";
+    }
+
+    function openInfo() {
+        const element = document.getElementById('info');
+        element.style.display = 'block';
+
+        setTimeout(() => {
+            element.style.maxHeight = '1000px';
+            element.style.opacity = '1';
+        }, 0);
+
+        const button = document.getElementById("statsButton");
+        button.style.display = "none"
+    }
+</script>
+</html>

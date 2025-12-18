@@ -1,0 +1,223 @@
+<header>
+  <nav>
+    <div id="nav">
+      <div class="nav-left">
+        <ul class="menu-items">
+          <li class="menu-item mobile-only">
+            <button id="menuButton" class="menu-toggle">
+              <i class="fa-solid fa-bars"></i>
+            </button>
+          </li>
+          <li class="menu-item mobile-only">
+            <a href="<%=invite%>" class="menu-link">
+              <strong class="menu-home"><%=bot.username%></strong>
+            </a>
+          </li>
+          <li class="menu-item desktop-only">
+            <a href="<%= invite %>">
+              <img
+                src="https://cdn.discordapp.com/avatars/<%= bot.id %>/<%= bot.avatar %>.jpg"
+                class="menu-avatar-bot"
+                alt=""
+              />
+            </a>
+          </li>
+          <li class="menu-item desktop-only">
+            <a href="https://abot.fr" class="menu-link menu-home"> Accueil </a>
+          </li>
+          <% if (page === "index") { %>
+          <li class="menu-item desktop-only">
+            <a href="#statistics" class="menu-link menu-home"> Statistiques </a>
+          </li>
+          <% } %>
+          <li class="menu-item desktop-only">
+            <a
+              href="https://top.gg/bot/1030168031256662036"
+              class="menu-link menu-home"
+            >
+              Top.gg
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-right">
+        <ul class="menu-items">
+          <li class="menu-item mobile-only">
+            <a href="<%= invite %>">
+              <img
+                src="https://cdn.discordapp.com/avatars/<%= bot.id %>/<%= bot.avatar %>.jpg"
+                class="menu-avatar-bot"
+                alt=""
+              />
+            </a>
+          </li>
+          <li class="menu-item desktop-only">
+            <a
+              href="https://discord.gg/A4Bs89MrXX"
+              class="menu-icon"
+              target="_blank"
+            >
+              <i class="fa-brands fa-discord"></i>
+            </a>
+          </li>
+          <li class="menu-item desktop-only">
+            <a
+              href="mailto:contact.abotbot@gmail.com"
+              class="menu-icon"
+              target="_blank"
+            >
+              <i class="fa-solid fa-envelope"></i>
+            </a>
+          </li>
+          <li class="menu-item desktop-only">
+            <a
+              href="https://www.instagram.com/abotbot"
+              class="menu-icon"
+              target="_blank"
+            >
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+          </li>
+          <li class="menu-item desktop-only">
+            <a
+              href="https://www.tiktok.com/@abotboat"
+              class="menu-icon"
+              target="_blank"
+            >
+              <i class="fa-brands fa-tiktok"></i>
+            </a>
+          </li>
+          <li class="menu-item desktop-only">
+            <% if (login !== "/login"){%>
+            <a href="/logout" class="menu-icon">
+              <i class="fa-solid fa-right-to-bracket mr-2"></i>
+            </a>
+            <%}%>
+          </li>
+          <li class="menu-item desktop-only">
+            <a href="<%=login%>" class="menu-link">
+              <% if (login === "/login") { %>
+              <div class="login-button">
+                <strong class="text-white font-bold"><%= status %></strong>
+              </div>
+              <% } else { %>
+              <div class="user-profile">
+                <img
+                  src="https://cdn.discordapp.com/avatars/<%= user.id%>/<%= user.avatar%>.jpg"
+                  class="menu-avatar"
+                  alt=""
+                />
+                <strong class="menu-home"><%= status %></strong>
+              </div>
+              <% } %>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div id="menu" class="menu-overlay hidden">
+    <button id="closeButton" class="close-button">
+      <i class="fa-solid fa-times"></i>
+    </button>
+    <ul class="menu-list">
+      <li>
+        <a href="<%=invite%>" class="menu-title"> <%=bot.username%> </a>
+      </li>
+      <li>
+        <a href="https://abot.fr" class="menu-link"> Accueil </a>
+      </li>
+      <% if (page === "index") { %>
+      <li>
+        <a href="#statistics" class="menu-link" onclick="closeMenu()">
+          Statistiques
+        </a>
+      </li>
+      <% } %>
+      <li>
+        <a href="https://top.gg/bot/1030168031256662036" class="menu-link">
+          Top.gg
+        </a>
+      </li>
+      <li>
+        <div class="menu-icons">
+          <a
+            href="https://discord.gg/A4Bs89MrXX"
+            class="menu-icon"
+            target="_blank"
+          >
+            <i class="fa-brands fa-discord"></i>
+          </a>
+          <a
+            href="mailto:contact.abotbot@gmail.com"
+            class="menu-icon"
+            target="_blank"
+          >
+            <i class="fa-solid fa-envelope"></i>
+          </a>
+          <a
+            href="https://www.instagram.com/abotbot"
+            class="menu-icon"
+            target="_blank"
+          >
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a
+            href="https://www.tiktok.com/@abotboat"
+            class="menu-icon"
+            target="_blank"
+          >
+            <i class="fa-brands fa-tiktok"></i>
+          </a>
+        </div>
+      </li>
+      <% if (login !== "/login"){%>
+      <li>
+        <a href="/logout" class="menu-logout">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          <span>Déconnexion</span>
+        </a>
+      </li>
+      <%}%>
+      <li>
+        <a href="<%=login%>" class="menu-link">
+          <% if (login === "/login") {%>
+          <div class="user-profile center">
+            <strong class="menu-home"><%= status %></strong>
+          </div>
+          <%} else {%>
+          <div class="user-profile center">
+            <img
+              src="https://cdn.discordapp.com/avatars/<%= user.id%>/<%= user.avatar%>.jpg"
+              class="menu-avatar"
+              alt=""
+            />
+            <strong class="menu-home"><%= status %></strong>
+          </div>
+          <%}%>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    const menu = document.getElementById("menu");
+
+    const menuButton = document.getElementById("menuButton");
+    menuButton.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
+    });
+
+    const closeButton = document.getElementById("closeButton");
+    closeButton.addEventListener("click", () => {
+      menu.classList.add("hidden");
+    });
+
+    function closeMenu() {
+      const menu = document.getElementById("menu");
+      menu.classList.add("hidden");
+    }
+  </script>
+</header>

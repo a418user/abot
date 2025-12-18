@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <%- include('partials/header.ejs'); %>
+
+    <title>Accueil - <%=bot.username%></title>
+
+    <meta content="abot Dashboard" property="og:title" />
+    <meta
+      content="The official abot dashboard to help you manage the bot on your server."
+      property="og:description"
+    />
+    <meta content="https://dashboard.abot.fr" property="og:url" />
+    <meta
+      content="https://dashboard.abot.fr/assets/img/abotDashboard.png"
+      property="og:image"
+    />
+    <meta content="#0000ff" data-react-helmet="true" name="theme-color" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <%- include('partials/components/navbar.ejs'); %>
+
+    <div id="wrapper-index">
+      <section class="index">
+        <p class="heading">
+          Il est temps d'ajouter
+          <span class="blurple"><%=bot.username%></span> sur votre serveur !
+        </p>
+        <p class="subheading">
+          abot est un bot Discord multi-fonction français, gratuit, avec une
+          diversité de commandes.
+        </p>
+
+        <div class="index-container">
+          <ul class="index-list">
+            <li>
+              <a
+                href="<%=invite%>"
+                target="_blank"
+                class="index-button index-add-button"
+              >
+                <i class="space fa-solid fa-plus"></i>
+                Ajouter <%=bot.username%>
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://abot.fr"
+                class="index-button index-official-button"
+              >
+                <i class="space fa-solid fa-book"></i>
+                Site Officiel
+              </a>
+            </li>
+          </ul>
+          <div class="image-container move" data-aos="fade-left">
+            <img src="/assets/img/abotBotDashboard.png" alt="abot logo" />
+          </div>
+        </div>
+
+        <div id="statistics" class="statistics-container">
+          <div class="statistics-header">
+            <span class="heading">Statistiques</span>
+          </div>
+          <div class="separator long"></div>
+          <div class="stats">
+            <ul class="stats-list">
+              <li>
+                <div class="stat-item">
+                  <p class="stat-label">
+                    <i class="fa-solid fa-server"></i> Serveurs
+                  </p>
+                  <span class="stat-value"><%=guilds%></span>
+                </div>
+              </li>
+              <li>
+                <div class="stat-item">
+                  <p class="stat-label">
+                    <i class="fa-solid fa-angle-right"></i> Commandes
+                  </p>
+                  <span class="stat-value"><%=numberCommands%></span>
+                </div>
+              </li>
+              <li>
+                <div class="stat-item">
+                  <p class="stat-label">
+                    <i class="fa-solid fa-people-group"></i> Utilisateurs
+                  </p>
+                  <span class="stat-value"><%=users%></span>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="separator short"></div>
+          <div class="stats">
+            <ul class="stats-list">
+              <li>
+                <div class="stat-item">
+                  <p class="stat-label">
+                    <i class="fa-solid fa-rss"></i> Ping du Bot
+                  </p>
+                  <span class="stat-value"><%=pingBot%>ms</span>
+                </div>
+              </li>
+              <li>
+                <div class="stat-item">
+                  <p class="stat-label">
+                    <i class="fa-solid fa-plug"></i> En ligne depuis
+                  </p>
+                  <span class="stat-value" id="uptime"></span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <%- include('partials/components/footer.ejs') %> <%-
+      include('partials/footer'); %>
+    </div>
+  </body>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    socket.on("uptime", function (data) {
+      $("#uptime").html(data.uptime);
+    });
+  </script>
+</html>

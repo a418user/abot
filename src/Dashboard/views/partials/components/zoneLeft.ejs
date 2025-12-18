@@ -1,0 +1,54 @@
+<div id="left-zone">
+    <ul class="slide">
+        <li>
+            <% if(user.avatar) {%>
+                <a href="/profile" class="desktop-only">
+                    <img src="https://cdn.discordapp.com/avatars/<%= user.id%>/<%= user.avatar%>.jpg" alt="" class="avatar">
+                </a>
+                <button class="button-profile-mobile mobile-only" id="leftZoneButton">
+                    <img src="https://cdn.discordapp.com/avatars/<%= user.id%>/<%= user.avatar%>.jpg" alt="" class="avatar">
+                </button>
+            <%} else {%>
+                <button>
+                    <canvas class="avatar" id="<%= user.username.replace(/\w+/g, name => name[0]).replace(/\s/g, '') %>"></canvas>
+                    <script>
+                        function createAvatar(user) {
+                            const nameAcronym = document.getElementById(user.username.replace(/\w+/g, name => name[0]).replace(/\s/g, '')).getContext('2d');
+                            nameAcronym.font = '15px Arial';
+                            nameAcronym.textAlign = "center";
+                            nameAcronym.fillStyle = "white";
+                            nameAcronym.fillText(user.username.replace(/\w+/g, name => name[0]).replace(/\s/g, ''), 35, 40);
+                        }
+                        createAvatar();
+                    </script>
+                </button>
+            <%}%>
+        </li>
+        <li>
+            <hr class="divider">
+        </li>
+        <li>
+            <ul class="slide">
+                <% userGuilds.forEach(function(guild) { %>
+                    <% if (guild.icon) { %>
+                        <li>
+                            <a href="/servers/<%= guild.id %>">
+                                <img src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png" alt="" class="avatar" title="<%= guild.name%>">
+                            </a>
+                        </li>
+                    <% } else { %>
+                        <li>
+                            <a href="/servers/<%= guild.id %>">
+                                <div class="guild-avatar">
+                                    <span class="guild-name">
+                                        <%= guild.name.replace(/\w+/g, name => name[0]).replace(/\s/g, '') %>
+                                    </span>
+                                </div>
+                            </a>
+                        </li>
+                    <%}%>
+                <% })%>
+            </ul>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('partials/header.ejs'); %>
+
+    <title>Salons spécials - <%=bot.username%></title>
+</head>
+
+<body>
+<!-- Notifications Start -->
+<%- include('partials/notifications/notifications.ejs') %>
+<!-- Notifications End -->
+
+<%- include('partials/components/navbar.ejs'); %>
+
+<div id="wrapper">
+    <%- include('partials/components/zoneLeft.ejs'); %>
+
+    <%- include('partials/components/zoneProfileCategories.ejs'); %>
+
+    <div id="right-zone">
+        <div class="title-container">
+            <span class="title-text">Salons spécials</span>
+        </div>
+
+        <div id="content-container">
+            <div class="box-select">
+                <div class="roles-inner">
+                    <form action="/channels/ghostping/save/<%= server.id %>" method="POST">
+                        <label class="input-title">Ghost ping :
+                            <% if (channels.ghostPing[0]) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+                        <br>
+                        <label class="variables">Salon(s) où sera mentionné un nouveau membre lors de son arrivée :</label>
+                        <div class="autorole-container" id="channels-container">
+                            <% channels.ghostPing.forEach(channel => { %>
+                                <div class="role-item" data-channel-id="<%= channel.id %>" style="border: 2px solid var(--white);">
+                                    #<%= channel.name %>
+                                    <span class="remove-role" style="cursor: pointer;" onclick="removeChannel(this)"> ❌</span>
+                                    <input type="hidden" name="channels[]" value="<%= channel.id %>">
+                                </div>
+                            <% }); %>
+                            <button type="button" class="add-role-btn" id="add-channel-btn">+</button>
+                        </div>
+
+                        <div class="role-dropdown" id="channel-dropdown">
+                            <ul id="role-list">
+                                <% channels.allChannels.forEach(channel => { %>
+                                    <li class="role-option"
+                                        data-channel-id="<%= channel.id %>"
+                                        style="color: var(--white);"
+                                        onclick="addChannel(this)">
+                                        #<%= channel.name %>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                        <button type="submit" class="save-role-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/channels/mention/save/<%= server.id %>" method="POST">
+                        <label class="input-title">Mentions supprimées :
+                            <% if (channels.deletedMention) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (channels.deletedMention) {%>
+                                <option value="<%= channels.deletedMention.id %>" selected>#<%= channels.deletedMention.name %></option>
+                            <%} else {%>
+                                <option value="" selected>❌ Aucun salon</option>
+                            <%}%>
+                            <% channels.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <label class="variables">● Historique des messages supprimés avec mention.</label>
+                        <label class="variables">● Envoie du message dans le salon via un webhook.</label>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/channels/prison/save/<%= server.id %>" method="POST">
+                        <label class="input-title">Prison :
+                            <% if (channels.jailRole) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+
+                        <div id="role-option" class="input-level">
+                            <div class="level-role-dropdown-container">
+                                <div class="level-role-dropdown-header" onclick="toggleDropdown('role-dropdown-custom')">
+                                    <span id="selected-role"
+                                            style="color: <%= channels.jailRole ? channels.jailRole.colorRGB : 'var(--white)' %>;">
+                                            <%= channels.jailRole ? channels.jailRole.name : 'Sélectionner un rôle' %> </span>
+                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
+                                </div>
+                                <div class="level-dropdown" id="role-dropdown-custom">
+                                    <ul id="role-list">
+                                        <% channels.allRoles.forEach(role => { %>
+                                            <li class="role-option <%= role.isNotPossible ? 'disabled' : '' %>"
+                                                data-managed="<%= role.isNotPossible %>"
+                                                data-role-id="<%= role.id %>"
+                                                style="color: <%= role.colorRGB %>;"
+                                                    <%- role.isNotPossible ? 'onclick="event.preventDefault(); event.stopPropagation();"' : 'onclick="selectRole(this);"' %>>
+                                                <%= role.name %>
+                                                <%- role.isNotPossible ? '<span class="info-icon" data-tooltip="Ce rôle est plus haut que mon rôle le plus haut"> <i style="color: red" class="fa-solid fa-circle-exclamation"></i></span>' : '' %>
+                                            </li>
+                                        <% }); %>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <input type="hidden"
+                                   id="role-select"
+                                   name="roleId"
+                                   value="<%= channels.jailRole ? channels.jailRole.id : ''%>"
+                            >
+                        </div>
+                        <label class="variables">● Les membres en prison se voient attribuer un rôle.</label>
+                        <label class="variables">● Permet de restreindre l'accès au serveur.</label>
+
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/channels/birthday/save/<%= server.id %>" method="POST">
+                        <label class="input-title">Anniversaires :
+                            <% if (channels.birthday) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (channels.birthday) {%>
+                                <option value="<%= channels.birthday.id %>" selected>#<%= channels.birthday.name %></option>
+                            <%} else {%>
+                                <option value="" selected>❌ Aucun salon</option>
+                            <%}%>
+                            <% channels.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <label class="variables">● Envoyer un message lors de l'anniversaire de vos membre.</label>
+                        <label class="variables">● Envoie automatique tous les jours à 10H.</label>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box-height">
+                <div class="input-inner">
+                    <form id="form-messages" action="/channels/boost/save/<%= server.id %>" method="POST">
+                        <label class="input-title">Boosts :
+                            <% if (channels.boost.channel) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+
+                        <label class="input-title">Message ajout boost :</label>
+                        <textarea rows="3" name="messageAdd" id="messageAdd" class="text-area" required><%= channels.boost.messageAdd %></textarea>
+
+                        <div class="switch-container">
+                            <label class="input-title">Mention du membre :</label>
+                            <% if (channels.boost.mention) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="mention" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="mention">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </div>
+
+                        <label class="input-title">Message retrait boost :</label>
+                        <textarea rows="3" name="messageRemove" id="messageRemove" class="text-area" required><%= channels.boost.messageRemove %></textarea>
+                        <label class="input-title">Salon :</label>
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (channels.boost.channel) {%>
+                                <option value="<%= channels.boost.channel.id %>" selected>#<%= channels.boost.channel.name %></option>
+                            <%} else {%>
+                                <option value="" selected>❌ Aucun salon</option>
+                            <%}%>
+                            <% channels.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <label class="variables">● Envoyer un message lorsque qu'un membre boost le serveur.</label>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <label class="input-title">Variables disponibles :</label>
+                    <label class="variables"><code>{user.mention}</code> : Mention de l'utilisateur</label>
+                    <label class="variables"><code>{user.username}</code> : Nom de l'utilisateur</label>
+                    <label class="variables"><code>{member.nickname}</code> : Pseudo du membre</label>
+                    <label class="variables"><code>{server}</code> : Nom du serveur</label>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="input-inner">
+                    <form id="form-messages" action="/channels/report/save/<%= server.id %>" method="POST">
+                        <label class="input-title">Report :
+                            <% if (channels.report) {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            <% } else {%>
+                                <label class="switch">
+                                    <input type="checkbox" name="enable">
+                                    <span class="slider"></span>
+                                </label>
+                            <% } %>
+                        </label>
+
+                        <select name="channel" id="channel" class="channels-dropdown">
+                            <% if (channels.report) {%>
+                                <option value="<%= channels.report.id %>" selected>#<%= channels.report.name %></option>
+                            <%} else {%>
+                                <option value="" selected>❌ Aucun salon</option>
+                            <%}%>
+                            <% channels.allChannels.forEach((ch) => { %>
+                                <option value="<%= ch.id %>">#<%= ch.name %></option>
+                            <% }); %>
+                        </select>
+                        <label class="variables">● Historique des reports des membres.</label>
+                        <label class="variables">● Envoyer un message de façon privé aux modérateurs.</label>
+                        <button type="submit" class="save-button button-blurple">Sauvegarder</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    const openMenu = document.getElementById('leftZoneButton');
+    const profileZone = document.getElementById('profile-zone');
+
+    openMenu.addEventListener('click', () => {
+        profileZone.classList.toggle('desktop-only');
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const addChannelBtn = document.getElementById("add-channel-btn");
+        const channelDropdown = document.getElementById("channel-dropdown");
+
+        /* Open dropdown menu */
+        addChannelBtn.addEventListener("click", () => {
+            channelDropdown.style.display = channelDropdown.style.display === "block" ? "none" : "block";
+        });
+
+        /* Close dropdown menu */
+        document.addEventListener("click", (e) => {
+            if (!channelDropdown.contains(e.target) && e.target !== addChannelBtn) {
+                channelDropdown.style.display = "none";
+            }
+        });
+
+        const roleDropdown = document.getElementById("role-dropdown-custom");
+        const headerDropdown = document.getElementsByClassName("level-role-dropdown-header");
+
+        /* Close dropdown menu */
+        document.addEventListener("click", (event) => {
+            if (!headerDropdown[0].contains(event.target)) {
+                roleDropdown.style.display = "none";
+            }
+        });
+    });
+</script>
+<script>
+    function addChannel(roleElement) {
+        const channelId = roleElement.getAttribute("data-channel-id");
+        const channelName = roleElement.innerText;
+        const channelsContainer = document.getElementById(`channels-container`);
+        const addRoleBtn = document.getElementById(`add-channel-btn`);
+
+        if ([...channelsContainer.querySelectorAll(".role-item")].some(el => el.dataset.channelId === channelId)) return;
+
+        /* Limit to 5 channels */
+        if (channelsContainer.querySelectorAll(".role-item").length >= 5) return;
+
+        const channelItem = document.createElement("div");
+        channelItem.classList.add("role-item");
+        channelItem.dataset.channelId = channelId;
+        channelItem.style.border = `2px solid var(--white)`;
+        channelItem.innerText = channelName;
+
+        const removeBtn = document.createElement("span");
+        removeBtn.innerText = " ❌";
+        removeBtn.style.cursor = "pointer";
+        removeBtn.onclick = () => removeChannel(removeBtn);
+
+        channelItem.appendChild(removeBtn);
+
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "channels[]";
+        hiddenInput.value = channelId;
+        channelItem.appendChild(hiddenInput);
+
+        channelsContainer.insertBefore(channelItem, addRoleBtn);
+    }
+
+    function removeChannel(button) {
+        button.parentElement.remove();
+    }
+</script>
+<script>
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    function selectRole(element) {
+        const selectedRole = document.getElementById("selected-role");
+        const roleId = element.getAttribute("data-role-id");
+
+        selectedRole.style.color = element.style.color;
+        selectedRole.innerText = element.innerText;
+
+        document.getElementById("role-select").value = roleId;
+
+        document.getElementById("role-dropdown-custom").style.display = "none";
+    }
+</script>
+</html>

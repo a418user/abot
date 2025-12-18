@@ -1,0 +1,65 @@
+#left-zone {
+    width: 80px;
+    background: var(--background300);
+    height: calc(100% - 96px);
+    padding-top: 96px;
+}
+
+#left-zone ul {
+    overflow: scroll;
+    scrollbar-width: none;
+    height: 100%;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.slide {
+    align-items: center;
+    padding: 0.5rem;
+}
+
+.avatar {
+    width: 3.5rem;
+    border-radius: 50%;
+    margin-bottom: 0.25rem;
+    transition: outline 0.1s ease;
+}
+
+.avatar:hover {
+    outline: 3px solid var(--blurple400);
+    outline-offset: 2px;
+}
+
+.divider {
+    width: 4em;
+    border: 1px solid var(--blurple400);
+}
+
+.guild-avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+    outline: 3px solid var(--gray);
+    outline-offset: 1px;
+    transition: outline 0.1s ease;
+}
+
+.guild-avatar:hover {
+    outline: 3px solid var(--blurple400);
+    outline-offset: 2px;
+}
+
+.guild-name {
+    color: var(--white);
+}
+
+.button-profile-mobile {
+    background: var(--background300);
+    border: none;
+}

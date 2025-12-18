@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('partials/header.ejs'); %>
+
+    <title>Serveur - <%=bot.username%></title>
+</head>
+
+<body>
+    <%- include('partials/components/navbar.ejs'); %>
+
+    <div id="wrapper">
+        <%- include('partials/components/zoneLeft.ejs'); %>
+        <%- include('partials/components/zoneProfileCategories.ejs'); %>
+
+        <% const rankColors = ["#FFD700", "#C0C0C0", "#CD7F32"]; %>
+        <% const podiumHeights = ["200px", "160px", "150px"]; %>
+
+        <div id="right-zone">
+            <div id="content-container">
+                <div class="box-width">
+                    <div class="input-inner">
+                        <label class="input-title">Classement des niveaux :</label>
+                        <div class="podium-container">
+                            <% [1, 0, 2].forEach((pos) => { %>
+                            <div class="podium-item">
+                                <p class="rank" style="color: <%= rankColors[pos] %>;">#<%= pos + 1 %></p>
+                                <div class="podium-place" style="border-color: <%= rankColors[pos] %>; height: <%= podiumHeights[pos] %>;">
+                                    <img src="<%= data.top3Xp[pos].avatar %>" alt="<%= data.top3Xp[pos].username %>" class="leaderboard-avatar">
+                                    <p class="username"><%= data.top3Xp[pos].username %></p>
+                                    <p class="level">Niveau : <%= data.top3Xp[pos].level %></p>
+                                </div>
+                            </div>
+                            <% }); %>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="box-width">
+                    <div class="input-inner">
+                        <label class="input-title">Classement de l'économie :</label>
+                        <div class="podium-container">
+
+                            <% [1, 0, 2].forEach((pos) => { %>
+                                <div class="podium-item">
+                                    <p class="rank" style="color: <%= rankColors[pos] %>;">#<%= pos + 1 %></p>
+                                    <div class="podium-place" style="border-color: <%= rankColors[pos] %>; height: <%= podiumHeights[pos] %>;">
+                                        <img src="<%= data.top3Money[pos].avatar %>" alt="<%= data.top3Money[pos].username %>" class="leaderboard-avatar">
+                                        <p class="username"><%= data.top3Money[pos].username %></p>
+                                        <p class="level"><%= data.moneyName %> : <%= data.top3Money[pos].money %></p>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    const openMenu = document.getElementById('leftZoneButton');
+    const profileZone = document.getElementById('profile-zone');
+
+    openMenu.addEventListener('click', () => {
+        profileZone.classList.toggle('desktop-only');
+    });
+</script>
+</html>

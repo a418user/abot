@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+@import url('navbar.css');
+@import url('footer.css');
+
+@import url('zoneLeft.css');
+@import url('zoneProfile.css');
+@import url('zoneRight.css');
+
+@import url('index.css');
+@import url('servers.css');
+@import url('profile.css');
+@import url('settings.css');
+@import url('administration.css');
+
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --info: #209cee;
+    --orange: #C2410C;
+
+    --red: #f61a47;
+    --redHover: #d40e3b;
+
+    --blue: #2b6cb0;
+    --blueHover: #2c5282;
+
+    --gray: #717171;
+    --gray2: #1f2937;
+    --grayText: #a0aec0;
+    --grayLevel: #222;
+
+    --slate: #314158FF;
+    --slate900: #1e293b;
+
+    --blurple300: #07575d;
+    --blurple400: #00a7b3;
+    --blurple500: #136d74;
+
+    --background200: #001329;
+    --background300: #040E20;
+    --background400: #020611;
+}
+
+* {
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    color: var(--white);
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: 0.00938em;
+}
+
+code {
+    color: var(--blurple400);
+    background: var(--gray2);
+}
+
+.blurple {
+    color: var(--blurple400);
+}
+
+.space {
+    margin-right: 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.desktop-only {
+    display: block;
+}
+
+.mobile-only {
+    display: none;
+}
+
+#wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+
+    .mobile-only {
+        display: block;
+    }
+}

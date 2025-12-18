@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('partials/header.ejs'); %>
+
+    <title>Roles - <%=bot.username%></title>
+</head>
+
+<body>
+    <!-- Notifications Start -->
+    <%- include('partials/notifications/notifications.ejs') %>
+    <!-- Notifications End -->
+
+    <%- include('partials/components/navbar.ejs'); %>
+
+    <div id="wrapper">
+        <%- include('partials/components/zoneLeft.ejs'); %>
+
+        <%- include('partials/components/zoneProfileCategories.ejs'); %>
+
+        <div id="right-zone">
+            <div class="title-container">
+                <span class="title-text">Auto rôles</span>
+            </div>
+
+            <div id="content-container">
+                <div class="box-select">
+                    <div class="roles-inner">
+                        <form action="/roles/save/<%= server.id %>?type=user" method="POST">
+                            <label class="input-title">Membres :
+                                <% if (roles.rolesDatabaseUser[0]) {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="enable" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } else {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="enable">
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } %>
+                            </label>
+                            <div class="autorole-container" id="autorole-container-members">
+                                <% roles.rolesServer.forEach(role => {
+                                    if (roles.rolesDatabaseUser.find(r => r.roleId === role.id)) { %>
+                                        <div class="role-item" data-role-id="<%= role.id %>" style="border: 2px solid <%= role.colorRGB %>;">
+                                            <%= role.name %>
+                                            <span class="remove-role-btn" onclick="removeRole(this)"> ❌</span>
+                                            <input type="hidden" name="roles[]" value="<%= role.id %>">
+                                        </div>
+                                    <% }
+                                }); %>
+
+                                <button type="button" class="add-role-btn" id="add-role-btn-members" data-type="members">+</button>
+                            </div>
+
+                            <div class="role-dropdown" id="role-dropdown-members" data-type="members">
+                                <ul id="role-list">
+                                    <% roles.rolesServer.forEach(role => { %>
+                                        <li class="role-option <%= role.isNotPossible ? 'disabled' : '' %>"
+                                            data-managed="<%= role.isNotPossible %>"
+                                            data-role-id="<%= role.id %>"
+                                            style="color: <%= role.colorRGB %>;"
+                                            <%- role.isNotPossible ? 'onclick="event.preventDefault(); event.stopPropagation();"' : 'onclick="addRole(this, \'members\');"' %>>
+                                            <%= role.name %>
+                                            <%- role.isNotPossible ? '<span class="info-icon" data-tooltip="Ce rôle est plus haut que mon rôle le plus haut"> <i style="color: red" class="fa-solid fa-circle-exclamation"></i></span>' : '' %>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+
+                            <button type="submit" class="save-role-button button-blurple">Sauvegarder</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="box-select">
+                    <div class="roles-inner">
+                        <form action="/roles/save/<%= server.id %>?type=bot" method="POST">
+                            <label class="input-title">Bots :
+                                <% if (roles.rolesDatabaseBot[0]) {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="enable" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } else {%>
+                                    <label class="switch">
+                                        <input type="checkbox" name="enable">
+                                        <span class="slider"></span>
+                                    </label>
+                                <% } %>
+                            </label>
+                            <div class="autorole-container" id="autorole-container-bots">
+                                <% roles.rolesServer.forEach(role => {
+                                if (roles.rolesDatabaseBot.find(r => r.roleId === role.id)) { %>
+                                    <div class="role-item" data-role-id="<%= role.id %>" style="border: 2px solid <%= role.colorRGB %>;">
+                                        <%= role.name %>
+                                        <span class="remove-role-btn" onclick="removeRole(this)"> ❌</span>
+                                        <input type="hidden" name="roles[]" value="<%= role.id %>">
+                                    </div>
+                                <% }
+                                }); %>
+
+                                <button type="button" class="add-role-btn" id="add-role-btn-bots" data-type="bots">+</button>
+                            </div>
+
+                            <div class="role-dropdown" id="role-dropdown-bots" data-type="bots">
+                                <ul id="role-list">
+                                    <% roles.rolesServer.forEach(role => { %>
+                                        <li class="role-option <%= role.isNotPossible ? 'disabled' : '' %>"
+                                            data-managed="<%= role.isNotPossible %>"
+                                            data-role-id="<%= role.id %>"
+                                            style="color: <%= role.colorRGB %>;"
+                                                <%- role.isNotPossible ? 'onclick="event.preventDefault(); event.stopPropagation();"' : 'onclick="addRole(this, \'bots\');"' %>>
+                                            <%= role.name %>
+                                            <%- role.isNotPossible ? '<span class="info-icon" data-tooltip="Ce rôle est plus haut que mon rôle le plus haut"> <i style="color: red" class="fa-solid fa-circle-exclamation"></i></span>' : '' %>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+
+                            <button type="submit" class="save-role-button button-blurple">Sauvegarder</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    const openMenu = document.getElementById('leftZoneButton');
+    const profileZone = document.getElementById('profile-zone');
+
+    openMenu.addEventListener('click', () => {
+        profileZone.classList.toggle('desktop-only');
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const addRoleBtn1 = document.getElementById("add-role-btn-members");
+        const roleDropdown1 = document.getElementById("role-dropdown-members");
+
+        const addRoleBtn2 = document.getElementById("add-role-btn-bots");
+        const roleDropdown2 = document.getElementById("role-dropdown-bots");
+
+        /* Open dropdown menu 1 */
+        addRoleBtn1.addEventListener("click", () => {
+            roleDropdown1.style.display = roleDropdown1.style.display === "block" ? "none" : "block";
+        });
+
+        /* Open dropdown menu 2 */
+        addRoleBtn2.addEventListener("click", () => {
+            roleDropdown2.style.display = roleDropdown2.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!roleDropdown1.contains(e.target) && e.target !== addRoleBtn1) {
+                roleDropdown1.style.display = "none";
+            }
+            if (!roleDropdown2.contains(e.target) && e.target !== addRoleBtn2) {
+                roleDropdown2.style.display = "none";
+            }
+        });
+    });
+</script>
+<script>
+    function addRole(roleElement, type) {
+        const roleId = roleElement.getAttribute("data-role-id");
+        const roleName = roleElement.innerText;
+        const roleColor = roleElement.style.color;
+        const rolesContainer = document.getElementById(`autorole-container-${type}`);
+        const addRoleBtn = document.getElementById(`add-role-btn-${type}`);
+
+        if ([...rolesContainer.querySelectorAll(".role-item")].some(el => el.dataset.roleId === roleId)) return;
+
+        const roleItem = document.createElement("div");
+        roleItem.classList.add("role-item");
+        roleItem.dataset.roleId = roleId;
+        roleItem.style.border = `2px solid ${roleColor}`;
+        roleItem.innerText = roleName;
+
+        const removeBtn = document.createElement("span");
+        removeBtn.innerText = " ❌";
+        removeBtn.style.cursor = "pointer";
+        removeBtn.onclick = () => removeRole(removeBtn);
+
+        roleItem.appendChild(removeBtn);
+
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "roles[]";
+        hiddenInput.value = roleId;
+        roleItem.appendChild(hiddenInput);
+
+        rolesContainer.insertBefore(roleItem, addRoleBtn);
+    }
+
+    function removeRole(button) {
+        button.parentElement.remove();
+    }
+</script>
+</html>
